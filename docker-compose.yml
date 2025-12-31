@@ -1,0 +1,22 @@
+services:
+  packrat:
+    image: possiblesloth/packrat:latest
+    container_name: packrat
+    environment:
+      - PUID=1027
+      - PGID=65536
+      - TZ=US/Central
+      - UMASK=022
+      - LISTEN_HOST=0.0.0.0
+      - LISTEN_PORT=7777
+      - STATIC_DIR=/podcasts
+      - SERVER_HOST=192.168.86.181:7777
+    volumes:
+#      - /volume1/data/media/podcasts:/media/podcasts
+      - /tmp/data:/podcasts
+    ports:
+      - 7777:7777
+    # network_mode: synobridge
+    security_opt:
+      - no-new-privileges:true
+    restart: always
