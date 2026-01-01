@@ -19,7 +19,13 @@ func handleUpdateFeed(logger *slog.Logger, config Config, jobs chan<- Job) http.
 
 			// TODO make sure URL is valid
 			logger.Info("got request to update URL", "URL", body.URL)
-			updateFeedFromURL(body.URL, config.StaticDir, config.ServerHost, jobs)
+			err = updateFeedFromURL(body.URL, config.StaticDir, config.ServerHost, jobs)
+			if err != nil {
+				logger.Error("error updating feed", "error", err.Error())
+				w.Write([]byte("error"))
+				w.WriteHeader(http.StatusBadRequest)
+				return
+			}
 			w.WriteHeader(http.StatusAccepted)
 		},
 	)

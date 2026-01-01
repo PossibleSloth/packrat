@@ -38,7 +38,7 @@ func UpdateFeed(feed *gofeed.Feed, staticDir string, serverHost string, jobs cha
 			Url:   feed.Image.URL, // TODO save feed images locally
 			Title: feed.Image.Title,
 		},
-		Items: make([]*feedhub.Item, 10), //len(feed.Items)),
+		Items: make([]*feedhub.Item, len(feed.Items)),
 	}
 
 	feedSlug := titleToSlug(feed.Title)
@@ -47,9 +47,6 @@ func UpdateFeed(feed *gofeed.Feed, staticDir string, serverHost string, jobs cha
 
 	// Add all items to the new feed
 	for i, item := range feed.Items {
-		if i >= 10 {
-			break
-		}
 		if len(item.Enclosures) != 1 {
 			return fmt.Errorf("unexpected value for enclosures when updating %s (%d)", feedSlug, len(item.Enclosures))
 		}
