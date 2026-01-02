@@ -23,6 +23,12 @@ push: build
 	docker push $(FULL_IMAGE_NAME)
 	@echo "--- Push complete ---"
 
+# Target to tag current version as "latest" tag
+release:
+	docker pull --platform linux/amd64 $(FULL_IMAGE_NAME)
+	docker tag $(FULL_IMAGE_NAME) $(DOCKERHUB_USER)/$(IMAGE_NAME):latest
+	docker push $(DOCKERHUB_USER)/$(IMAGE_NAME):latest
+
 # Target to clean up local images (optional)
 clean:
 	@echo "--- Removing local Docker image: $(FULL_IMAGE_NAME) ---"
@@ -37,4 +43,4 @@ test:
 run:
 	LISTEN_HOST=127.0.0.1 LISTEN_PORT=7777 STATIC_DIR=/tmp SERVER_HOST=127.0.0.1:7777 go run main.go
 
-.PHONY: all build push run clean
+.PHONY: all build push test release run clean
