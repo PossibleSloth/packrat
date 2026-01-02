@@ -1,6 +1,8 @@
 package app
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"os"
 	"path"
@@ -50,7 +52,11 @@ func UpdateFeed(feed *gofeed.Feed, staticDir string, serverHost string, jobs cha
 		if len(item.Enclosures) != 1 {
 			return fmt.Errorf("unexpected value for enclosures when updating %s (%d)", feedSlug, len(item.Enclosures))
 		}
-		localFilename := item.GUID + ".mp3"
+
+		// Use hash of GUID as filename. GUID is guaranteed to be unique, but could contain
+		// characters we don't want in filename, like slashes.
+		hashBytes := sha256.Sum256([]byte(item.GUID))
+		localFilename := hex.EncodeToString(hashBytes[:]) + ".mp3"
 
 		// Tell workers to download file
 		jobs <- Job{

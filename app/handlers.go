@@ -31,6 +31,25 @@ func handleUpdateFeed(logger *slog.Logger, config Config, jobs chan<- Job) http.
 	)
 }
 
+func handleGetStatus(logger *slog.Logger, jobs chan<- Job) http.Handler {
+	return http.HandlerFunc(
+		func(w http.ResponseWriter, r *http.Request) {
+			logger.Info("got status request")
+			downloadQueueLen := len(jobs)
+
+			responseBody := struct {
+				DownloadQueueLen int `json:"download_queue_len"`
+			}{
+				DownloadQueueLen: downloadQueueLen,
+			}
+			err := json.NewEncoder(w).Encode(&responseBody)
+			if err != nil {
+				logger.Error("unable to encode response", "error", err.Error())
+			}
+		},
+	)
+}
+
 func handleHealthzPlease(logger *slog.Logger) http.Handler {
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {

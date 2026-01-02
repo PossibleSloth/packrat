@@ -14,5 +14,6 @@ func addRoutes(
 	fs := http.FileServer(http.Dir(config.StaticDir))
 	mux.Handle("/feeds/", http.StripPrefix("/feeds/", fs))
 	mux.Handle("/api/feeds", handleUpdateFeed(logger, config, jobs))
+	mux.Handle("/api/status", handleGetStatus(logger, jobs))
 	mux.Handle("/healthz", handleHealthzPlease(logger))
 }

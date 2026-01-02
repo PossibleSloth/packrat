@@ -1,10 +1,10 @@
 # --- Variables ---
 DOCKERHUB_USER = sl0th
 IMAGE_NAME = packrat
-IMAGE_TAG = latest
+GIT_HASH := $(shell git rev-parse --short HEAD)
 
 # Full image name with tag
-FULL_IMAGE_NAME = $(DOCKERHUB_USER)/$(IMAGE_NAME):$(IMAGE_TAG)
+FULL_IMAGE_NAME = $(DOCKERHUB_USER)/$(IMAGE_NAME):$(GIT_HASH)
 
 # --- Targets ---
 
