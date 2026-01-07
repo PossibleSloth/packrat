@@ -35,7 +35,6 @@ func UpdateFeed(feed *gofeed.Feed, staticDir string, serverHost string, jobs cha
 		Link:        &feedhub.Link{Href: feed.FeedLink},
 		Description: feed.Description,
 		Copyright:   feed.Copyright,
-		Created:     *feed.PublishedParsed,
 		Image: &feedhub.Image{
 			Url:   feed.Image.URL, // TODO save feed images locally
 			Title: feed.Image.Title,
