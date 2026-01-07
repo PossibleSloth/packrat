@@ -15,7 +15,7 @@ These environment variables need to be set:
 Podcast feeds and episodes can be accessed at `http://{server}/feeds`
 
 To add a new podcast or check for new episodes of an existing one, send a POST request to the packrat server with the URL of the podcast RSS feed:
-`curl -X POST http://127.0.0.1:5000/api/feeds -H "Content-Type: application/json" -d '{"url":"https://feeds.simplecast.com/wjQvYtdl"}'
+`curl -X POST http://127.0.0.1:7777/api/feeds -H "Content-Type: application/json" -d '{"url":"https://feeds.simplecast.com/wjQvYtdl"}'
 `
 
 The `docker-compose.yml` file is written for deploying the app on a Synology NAS, which is how I'm using it.
@@ -23,5 +23,6 @@ The `docker-compose.yml` file is written for deploying the app on a Synology NAS
 ## Improvement ideas ##
 
 - Provide a way to see number of pending downloads
+- Support for youtube channels and playlists
 - Cron job to automatically update existing feeds on some regular cadence
 - DB to save data about what feeds have been added, etc.

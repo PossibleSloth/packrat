@@ -43,6 +43,10 @@ func UpdateFeed(feed *gofeed.Feed, staticDir string, serverHost string, jobs cha
 		Items: make([]*feedhub.Item, len(feed.Items)),
 	}
 
+	if feed.PublishedParsed != nil {
+		localfeed.Created = *feed.PublishedParsed
+	}
+
 	feedSlug := titleToSlug(feed.Title)
 	feedDir := path.Join(staticDir, feedSlug)
 	os.MkdirAll(feedDir, os.ModePerm)
@@ -76,13 +80,16 @@ func UpdateFeed(feed *gofeed.Feed, staticDir string, serverHost string, jobs cha
 			Id:          item.GUID,
 			Title:       item.Title,
 			Description: item.Description,
-			Created:     *item.PublishedParsed,
 			Link:        &feedhub.Link{Href: item.Link},
 			Enclosure: &feedhub.Enclosure{
 				Url:    fileUrl,
 				Length: item.Enclosures[0].Length,
 				Type:   item.Enclosures[0].Type,
 			},
+		}
+
+		if item.PublishedParsed != nil {
+			localfeed.Items[i].Created = *item.PublishedParsed
 		}
 	}
 
