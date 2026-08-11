@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log/slog"
 	"net/http"
+	"time"
 )
 
 func handleUpdateFeed(logger *slog.Logger, config Config, jobs chan<- Job) http.Handler {
@@ -46,6 +47,26 @@ func handleGetStatus(logger *slog.Logger, jobs chan<- Job) http.Handler {
 			if err != nil {
 				logger.Error("unable to encode response", "error", err.Error())
 			}
+		},
+	)
+}
+
+func handleStream(config Config) http.Handler {
+	return http.HandlerFunc(
+		func(w http.ResponseWriter, r *http.Request) {
+
+			feed := r.PathValue("feed")
+			file, err := getRandomFeedFile(feed, config.StaticDir)
+			if err != nil {
+				http.Error(w, "Feed not found", http.StatusNotFound)
+				return
+			}
+			defer file.Close()
+
+			w.Header().Set("Content-Type", "audio/mpeg")
+
+			http.ServeContent(w, r, feed+".mp3", time.Time{}, file)
+
 		},
 	)
 }

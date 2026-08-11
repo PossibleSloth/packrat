@@ -20,9 +20,15 @@ To add a new podcast or check for new episodes of an existing one, send a POST r
 
 The `docker-compose.yml` file is written for deploying the app on a Synology NAS, which is how I'm using it.
 
+## Deployment
+
+```
+docker build -t sl0th/packrat:latest .
+docker push docker.io/sl0th/packrat:latest
+```
+
 ## Improvement ideas ##
 
-- Provide a way to see number of pending downloads
 - Support for youtube channels and playlists
 - Cron job to automatically update existing feeds on some regular cadence
 - DB to save data about what feeds have been added, etc.

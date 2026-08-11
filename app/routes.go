@@ -15,5 +15,6 @@ func addRoutes(
 	mux.Handle("/feeds/", http.StripPrefix("/feeds/", fs))
 	mux.Handle("/api/feeds", handleUpdateFeed(logger, config, jobs))
 	mux.Handle("/api/status", handleGetStatus(logger, jobs))
+	mux.Handle("/stream/{feed}", handleStream(config))
 	mux.Handle("/healthz", handleHealthzPlease(logger))
 }

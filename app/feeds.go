@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"math/rand/v2"
 	"os"
 	"path"
 	"regexp"
@@ -101,6 +102,37 @@ func UpdateFeed(feed *gofeed.Feed, staticDir string, serverHost string, jobs cha
 	}
 
 	return nil
+}
+
+func getRandomFeedFile(slug string, staticDir string) (*os.File, error) {
+	entries, err := os.ReadDir(path.Join(staticDir, slug))
+	if err != nil {
+		return nil, err
+	}
+
+	var audioFiles []os.DirEntry
+	for _, entry := range entries {
+		if entry.IsDir() {
+			continue
+		}
+		if !strings.HasSuffix(entry.Name(), ".mp3") {
+			continue
+		}
+
+		audioFiles = append(audioFiles, entry)
+	}
+
+	if len(audioFiles) == 0 {
+		return nil, fmt.Errorf("feed %s contains no valid audio files", slug)
+	}
+
+	index := rand.N(len(audioFiles))
+	file, err := os.Open(path.Join(staticDir, slug, audioFiles[index].Name()))
+	if err != nil {
+		return nil, err
+	}
+
+	return file, nil
 }
 
 func titleToSlug(title string) string {
